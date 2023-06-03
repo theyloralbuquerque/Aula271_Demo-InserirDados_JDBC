@@ -2,7 +2,9 @@ package application;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
@@ -22,7 +24,8 @@ public class Program {
 					"INSERT INTO seller "
 					+ "(Name, Email, BirthDate, BaseSalary, DepartmentId) "
 					+ "VALUES "
-					+ "(?, ?, ?, ?, ?)"); // O prepareStatement() permite o uso de placeholders (?) (espaços reservados).
+					+ "(?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS); // O prepareStatement() permite o uso de placeholders (?) (espaços reservados).
+					// Statement.RETURN_GENERATED_KEYS recuperar as chaves geradas automaticamente após a execução de uma instrução SQL de inserção.
 
 			st.setString(1, "Carl Purple"); //.set+tipoDoCampo (coluna) chamado a partir de um objeto PreparedStatement permite inserir dados no BD.
 			st.setString(2, "carl@gmail.com");
@@ -31,8 +34,17 @@ public class Program {
 			st.setInt(5, 4); // Primeiro campo antes da vírgula é o placeholder e o segundo campo é o valor que terá nesse espaço. 
 
 			int rowsAffected = st.executeUpdate(); // .executeUpdate() executa o comando sql armazenado em st e retorna o n° de linhas afetadas.
-
-			System.out.println("Done! Rows affected: " + rowsAffected);
+			
+			if (rowsAffected > 0) {
+				ResultSet rs = st.getGeneratedKeys(); // .getGeneratedKeys() vai retornar as chaves geradas automaticamente após o .executeUpdate().
+				while (rs.next()) { // Enquanto o próximo valor de rs seja true.
+					int id = rs.getInt(1); // A variável id recebe o valor da primeira coluna, que é do tipo int, armazenada em rs.
+					System.out.println("Done! Id = " + id);
+				}
+			}
+			else {
+				System.out.println("No rows affected.");
+			}
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
