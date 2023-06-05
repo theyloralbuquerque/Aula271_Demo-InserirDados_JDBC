@@ -25,13 +25,19 @@ public class Program {
 					+ "(Name, Email, BirthDate, BaseSalary, DepartmentId) "
 					+ "VALUES "
 					+ "(?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS); // O prepareStatement() permite o uso de placeholders (?) (espaços reservados).
-					// Statement.RETURN_GENERATED_KEYS recuperar as chaves geradas automaticamente após a execução de uma instrução SQL de inserção.
+					// Statement.RETURN_GENERATED_KEYS recupera as chaves geradas automaticamente após a execução de uma instrução SQL de inserção.
 
 			st.setString(1, "Carl Purple"); //.set+tipoDoCampo (coluna) chamado a partir de um objeto PreparedStatement permite inserir dados no BD.
 			st.setString(2, "carl@gmail.com");
 			st.setDate(3, new java.sql.Date(sdf.parse("22/04/1985").getTime())); // Atenção para a inserção de tipos Date no BD.
 			st.setDouble(4, 3000.0);
 			st.setInt(5, 4); // Primeiro campo antes da vírgula é o placeholder e o segundo campo é o valor que terá nesse espaço. 
+			
+			
+			// EXAMPLE 2: Demonstração de inserção de duas linhas em um comando somente.
+			// st = conn.prepareStatement(
+			//		"insert into department (Name) values ('D1'),('D2')", 
+			//		Statement.RETURN_GENERATED_KEYS);
 
 			int rowsAffected = st.executeUpdate(); // .executeUpdate() executa o comando sql armazenado em st e retorna o n° de linhas afetadas.
 			
@@ -48,7 +54,7 @@ public class Program {
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
-		} 
+		}
 		catch (ParseException e) {
 			e.printStackTrace();
 		}
